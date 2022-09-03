@@ -5,14 +5,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 
-@Builder
-@Getter
 @NoArgsConstructor
-@AllArgsConstructor
-public class MemberResponseDto {
-    private boolean ok;
+@Getter
+@Builder
+public class ResponseErrorDto {
+    private String code;
     private String message;
 
+    public ResponseErrorDto(String code, String message){
+        this.code = code;
+        this.message = message;
+    }
 }

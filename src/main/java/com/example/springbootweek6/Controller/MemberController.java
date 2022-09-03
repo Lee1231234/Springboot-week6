@@ -13,12 +13,11 @@ import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
-
 public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping(value = "api/member/signup")
+    @PostMapping(value = "/api/member/signup")
     public ResponseEntity<?> signup(@RequestBody @Valid MemberRequestDto requestDto){
      return memberService.createMember(requestDto);
     }

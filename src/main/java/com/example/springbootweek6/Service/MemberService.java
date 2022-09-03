@@ -29,11 +29,11 @@ public class MemberService {
 
     public ResponseEntity<?> createMember(MemberRequestDto requestDto) {
         if (null != isPresentMember(requestDto.getNickname())) {
-            return  ResponseEntity.badRequest().body("중복된 닉네임입니다.");
+            return  Request("회원가입 실패",false);
         }
 
         if (!requestDto.getPassword().equals(requestDto.getPasswordConfirm())) {
-            return ResponseEntity.badRequest().body("비밀번호와 확인이 일치하지않습니다.");
+            return Request("회원가입 실패",false);
         }
 
         Member member = Member.builder()
@@ -41,38 +41,24 @@ public class MemberService {
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .build();
         memberRepository.save(member);
-        return ResponseEntity.ok(
-                MemberResponseDto.builder()
-                        .id(member.getId())
-                        .nickname(member.getNickname())
-                        .createdAt(member.getCreatedAt())
-                        .modifiedAt(member.getModifiedAt())
-                        .build()
-        );
+        return Request("회원가입 성공",true);
     }
 
     public ResponseEntity<?> login(LoginRequestDto requestDto, HttpServletResponse response) {
         Member member = isPresentMember(requestDto.getNickname());
         if (null == member) {
-            return ResponseEntity.badRequest().body("사용자를 찾을 수 없습니다.");
+            return Request("로그인 실패",false);
         }
 
         if (!member.validatePassword(passwordEncoder, requestDto.getPassword())) {
-            return ResponseEntity.badRequest().body("사용자를 찾을 수 없습니다.");
+            return Request("로그인 실패",false);
         }
 
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(member);
         tokenToHeaders(tokenDto, response);
 
-        return ResponseEntity.ok(
-                MemberResponseDto.builder()
-                        .id(member.getId())
-                        .nickname(member.getNickname())
-                        .createdAt(member.getCreatedAt())
-                        .modifiedAt(member.getModifiedAt())
-                        .build()
-        );
+        return Request("로그인 성공",true);
     }
 
     public ResponseEntity<?> logout(HttpServletRequest request) {
@@ -98,5 +84,22 @@ public class MemberService {
         response.addHeader("Refresh-Token", tokenDto.getRefreshToken());
         response.addHeader("Access-Token-Expire-Time", tokenDto.getAccessTokenExpiresIn().toString());
     }
+    public ResponseEntity<?> Request(String message,boolean bool){
+        if(bool){
+            return ResponseEntity.ok(
+                    MemberResponseDto.builder()
+                            .ok(bool)
+                            .message(message)
+                            .build()
+            );
+        }else{
+            return ResponseEntity.badRequest().body(
+                    MemberResponseDto.builder()
+                            .ok(bool)
+                            .message(message)
+                            .build()
+            );
+        }
 
+    }
 }
