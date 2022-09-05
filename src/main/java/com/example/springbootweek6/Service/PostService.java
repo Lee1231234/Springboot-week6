@@ -112,7 +112,7 @@ public class PostService {
         if(check!=null){
             return check;
         }
-
+        //파일명 찾아서 삭제
         String imageUrl = post.getImgUrl();
         String deleteUrl = imageUrl.substring(imageUrl.indexOf("static")); //이미지
         //s3에서 이미지 삭제
