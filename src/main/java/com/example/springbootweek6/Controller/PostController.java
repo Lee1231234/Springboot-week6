@@ -7,8 +7,10 @@ import com.example.springbootweek6.Service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,9 +19,9 @@ public class PostController {
     private final PostService postService;
 
     @RequestMapping(value = "/api/auth/post", method = RequestMethod.POST)
-    public ResponseEntity<?> createPost(@RequestBody PostRequestDto requestDto,
-                                        HttpServletRequest request) {
-        return postService.createPost(requestDto, request);
+    public ResponseEntity<?> createPost(PostRequestDto requestDto,
+                                        @RequestParam (value = "image") MultipartFile image, HttpServletRequest request) throws IOException {
+        return postService.createPost(requestDto, request, image);
     }
 
     @RequestMapping(value = "/api/post/{id}", method = RequestMethod.GET)
@@ -34,8 +36,9 @@ public class PostController {
 
     @RequestMapping(value = "/api/auth/post/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,
-                                     HttpServletRequest request) {
-        return postService.updatePost(id, postRequestDto, request);
+                                     HttpServletRequest request,
+                                        @RequestPart (value="image") MultipartFile imgae) throws IOException{
+        return postService.updatePost(id, postRequestDto, imgae, request);
     }
 
     @RequestMapping(value = "/api/auth/post/{id}", method = RequestMethod.DELETE)

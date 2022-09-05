@@ -7,6 +7,7 @@ import com.example.springbootweek6.Dto.Response.ResponseDto;
 import com.example.springbootweek6.Dto.Response.ResponseErrorDto;
 import com.example.springbootweek6.Repository.CommentRepository;
 import com.example.springbootweek6.Repository.PostRepository;
+import com.example.springbootweek6.Utill.S3Uploader;
 import com.example.springbootweek6.domain.Member;
 import com.example.springbootweek6.domain.Post;
 import com.example.springbootweek6.jwt.TokenProvider;
@@ -14,8 +15,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,23 +27,40 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final S3Uploader s3Uploader;
 
     private final TokenProvider tokenProvider;
     @Transactional
-    public ResponseEntity<?> createPost(PostRequestDto requestDto, HttpServletRequest request) {
+    public ResponseEntity<?> createPost(PostRequestDto requestDto, HttpServletRequest request, MultipartFile image) throws IOException {
 
         Member member = validateMember(request);
         if (null == member) {
             return ResponseEntity.badRequest().body(new ResponseErrorDto("INVALID_TOKEN", "Token이 유효하지 않습니다."));
         }
+        //이미지 postImage에 저장 폴더명 "static"
+        String postImage = s3Uploader.upload(image, "static");
 
-       Post post = new Post(requestDto,member);
+
+        Post post = Post.builder()
+                .title(requestDto.getTitle())
+                .review(requestDto.getReview())
+                .member(member)
+                .imgUrl(postImage)
+                .build();
 
         postRepository.save(post);
-        return ResponseEntity.ok(
-               ResponseDto.success(new PostResponseDto(post))
-        );
 
+        return ResponseEntity.ok(
+                PostResponseDto.builder()
+                        .id(post.getId())
+                        .title(post.getTitle())
+                        .review(post.getReview())
+                        .author(post.getMember().getNickname())
+                        .imgUrl(post.getImgUrl())
+                        .createdAt(post.getCreatedAt())
+                        .modifiedAt(post.getModifiedAt())
+                        .build()
+        );
 
     }
     @Transactional
@@ -61,14 +81,25 @@ public class PostService {
         return  ResponseEntity.ok(ResponseDto.success(posts));
     }
 
-    public ResponseEntity<?> updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request) {
+    public ResponseEntity<?> updatePost(Long id, PostRequestDto requestDto, MultipartFile file, HttpServletRequest request) throws IOException{
         Member member = validateMember(request);
         Post post = isPresentPost(id);
         ResponseEntity<?> check =  CheckErrorPost(post,member);
         if(check!=null){
             return check;
         }
-        post.update(requestDto);
+
+        String imageUrl = post.getImgUrl();
+        //현재 이미지가 있다면
+        if(imageUrl!= null) {
+            //삭제할 주소값을 얻어서
+            String deleteUrl = imageUrl.substring(imageUrl.indexOf("static"));
+            //s3uploader에서 삭제해준다.
+            s3Uploader.deleteImage(deleteUrl);
+            imageUrl = s3Uploader.upload(file,"static");
+
+        }
+        post.update(requestDto, imageUrl);
         return ResponseEntity.ok(ResponseDto.success(new PostResponseDto(post)));
 
     }
@@ -81,6 +112,11 @@ public class PostService {
         if(check!=null){
             return check;
         }
+
+        String imageUrl = post.getImgUrl();
+        String deleteUrl = imageUrl.substring(imageUrl.indexOf("static")); //이미지
+        //s3에서 이미지 삭제
+        s3Uploader.deleteImage(deleteUrl);
         postRepository.delete(post);
         return ResponseEntity.ok(ResponseDto.success(("Delete Success")));
     }

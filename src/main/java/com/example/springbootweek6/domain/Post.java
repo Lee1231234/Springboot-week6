@@ -2,12 +2,13 @@ package com.example.springbootweek6.domain;
 
 import com.example.springbootweek6.Dto.Request.PostRequestDto;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
-
+@Builder
 @Entity
 @Getter
 @NoArgsConstructor
@@ -19,6 +20,7 @@ public class Post extends Timestamped {
 
     @Column(nullable = false)
     private String title;
+
 
     @Column(nullable = false)
     private String review;
@@ -33,19 +35,11 @@ public class Post extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    public Post(PostRequestDto requestDto,Member member) {
-        this.title= requestDto.getTitle();
-        this.review= requestDto.getReview();
-        this.imgUrl= requestDto.getImageUrl();
-        this.member = member;
-    }
 
-
-
-    public void update(PostRequestDto requestDto) {
+    public void update(PostRequestDto requestDto, String imageUrl) {
         this.title = requestDto.getTitle();
         this.review = requestDto.getReview();
-        this.imgUrl = requestDto.getImageUrl();
+        this.imgUrl = imageUrl;
     }
     public boolean validateMember(Member member) {
         System.out.println(this.member.equals(member));
