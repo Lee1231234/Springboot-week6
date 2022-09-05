@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,6 +19,8 @@ import java.util.List;
 public class PostResponseDto {
 
     private Long id;
+
+    private Long view;
     private String title;
     private String review;
     private String imgUrl;
@@ -29,11 +32,13 @@ public class PostResponseDto {
     public PostResponseDto(Post post){
         this.id = post.getId();
         this.title = post.getTitle();
-        this.author = post.getMember().getNickname();
+        this.author = post.getMember().getUsername();
         this.imgUrl = post.getImgUrl();
         this.review = post.getReview();
+        this.view =  post.getView();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
     }
+
 
 }

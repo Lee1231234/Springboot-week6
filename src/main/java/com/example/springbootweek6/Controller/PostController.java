@@ -44,7 +44,7 @@ public class PostController {
         return postService.deletePost(id, request);
     }
     //일단 라이크용
-    @RequestMapping(value = "/api/auth/post/likes/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/auth/post/likes/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> createpostlikes(@PathVariable Long id,
                                           HttpServletRequest request){
         return postService.createpostlikes(id,request);

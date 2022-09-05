@@ -11,6 +11,8 @@ import org.hibernate.Hibernate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Builder
@@ -27,8 +29,12 @@ public class Member extends Timestamped {
     private String nickname;
 
     @Column(nullable = false)
+    private String username;
+    @Column(nullable = false)
     @JsonIgnore
     private String password;
+
+
 
     public boolean validatePassword(PasswordEncoder passwordEncoder, String password) {
         return passwordEncoder.matches(password, this.password);
@@ -45,4 +51,5 @@ public class Member extends Timestamped {
         Member member = (Member) o;
         return id != null && Objects.equals(id, member.id);
     }
+
 }
