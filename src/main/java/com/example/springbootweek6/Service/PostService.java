@@ -93,6 +93,7 @@ public class PostService {
         //현재 이미지가 있다면
         if(imageUrl!= null) {
             //삭제할 주소값을 얻어서
+            //https://springbootminiproject.s3.ap-northeast-2.amazonaws.com/static/edd3fd0d-be91-4816-8144-3be7abeed6a720200129_092254.jpeg
             String deleteUrl = imageUrl.substring(imageUrl.indexOf("static"));
             //s3uploader에서 삭제해준다.
             s3Uploader.deleteImage(deleteUrl);
