@@ -1,12 +1,13 @@
 package com.example.springbootweek6.domain;
 
+import com.example.springbootweek6.Dto.Request.CommentRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+
 
 @Builder
 @Getter
@@ -32,7 +33,12 @@ public class Comment extends Timestamped {
     private String content;
 
 
+    public boolean validateMember(Member member) {
+        return !this.member.equals(member);
+    }
 
 
-
+    public void update(CommentRequestDto requestDto) {
+        this.content = requestDto.getContent();
+    }
 }

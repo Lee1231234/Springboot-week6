@@ -10,10 +10,12 @@ import com.example.springbootweek6.domain.Post;
 import com.example.springbootweek6.jwt.TokenProvider;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,28 +28,25 @@ public class CommentService {
 
 
     //사용하지 않음.
-    public ResponseDto<?> getAllCommentsByPost(Long id) {
+    public ResponseEntity<?> getAllCommentsByPost(Long id) {
         return null;
     }
     @Transactional
-    public ResponseDto<?> createComment(CommentRequestDto requestDto, HttpServletRequest request) {
+    public ResponseEntity<?> createComment(CommentRequestDto requestDto, HttpServletRequest request) {
         Member member = validateMember(request);
-        if (null == member) {
-            return ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다.");
-        }
-
         Post post = postService.isPresentPost(requestDto.getPostid());
-        if (null == post) {
-            return ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다.");
-        }
 
+        ResponseEntity<?> check =checkError(post, member);
+        if(check!=null){
+            ResponseEntity.badRequest().body(check);
+        }
         Comment comment = Comment.builder()
                 .member(member)
                 .post(post)
                 .content(requestDto.getContent())
                 .build();
         commentRepository.save(comment);
-        return ResponseDto.success(
+        return ResponseEntity.ok(ResponseDto.success(
                 CommentResponseDto.builder()
                         .id(comment.getId())
                         .author(comment.getMember().getNickname())
@@ -55,19 +54,50 @@ public class CommentService {
                         .createdAt(comment.getCreatedAt())
                         .modifiedAt(comment.getModifiedAt())
                         .build()
-        );
+        ));
     }
     @Transactional
-    public ResponseDto<?> updateComment(Long id, CommentRequestDto requestDto, HttpServletRequest request) {
-        return null;
+    public ResponseEntity<?> updateComment(Long id, CommentRequestDto requestDto, HttpServletRequest request) {
+        Member member = validateMember(request);
+        Post post = postService.isPresentPost(requestDto.getPostid());
+        Comment comment = isPresentComment(id);
+        ResponseEntity<?> check =checkError(post, member,comment);
+        if(check!=null){
+            ResponseEntity.badRequest().body(check);
+        }
+        comment.update(requestDto);
+        return ResponseEntity.ok(ResponseDto.success(
+                CommentResponseDto.builder()
+                        .id(comment.getId())
+                        .author(comment.getMember().getNickname())
+                        .content(comment.getContent())
+                        .createdAt(comment.getCreatedAt())
+                        .modifiedAt(comment.getModifiedAt())
+                        .build()
+        ));
     }
+    @Transactional(readOnly = true)
+    public Comment isPresentComment(Long id) {
+        Optional<Comment> optionalComment = commentRepository.findById(id);
+        return optionalComment.orElse(null);
+    }
+
     @Transactional
-    public ResponseDto<?> deleteComment(Long id, HttpServletRequest request) {
-        return null;
+    public ResponseEntity<?> deleteComment(Long id, HttpServletRequest request) {
+        Member member = validateMember(request);
+        Comment comment = isPresentComment(id);
+        ResponseEntity<?> check =checkError( member,comment);
+        if(check!=null){
+            ResponseEntity.badRequest().body(check);
+        }
+        commentRepository.delete(comment);
+
+        return ResponseEntity.ok(ResponseDto.success("success"));
+
     }
 
     //사용하지않음
-    public ResponseDto<?> createcommentlikes(Long id, HttpServletRequest request) {
+    public ResponseEntity<?> createcommentlikes(Long id, HttpServletRequest request) {
         return null;
 
     }
@@ -77,5 +107,53 @@ public class CommentService {
             return null;
         }
         return tokenProvider.getMemberFromAuthentication();
+    }
+
+    @Transactional
+    public ResponseEntity<?> checkError(Post post,Member member,Comment comment){
+        if (null == member) {
+            return  ResponseEntity.badRequest().body(ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다."));
+        }
+
+
+        if (null == post) {
+            return  ResponseEntity.badRequest().body(ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다."));
+        }
+
+        if (null == comment) {
+            return  ResponseEntity.badRequest().body(ResponseDto.fail("NOT_FOUND", "존재하지 않는 댓글 id 입니다."));
+        }
+
+        if (comment.validateMember(member)) {
+            return  ResponseEntity.badRequest().body(ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다."));
+        }
+        return null;
+    }
+    @Transactional
+    public ResponseEntity<?> checkError(Post post,Member member){
+        if (null == member) {
+            return  ResponseEntity.badRequest().body(ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다."));
+        }
+
+
+        if (null == post) {
+            return  ResponseEntity.badRequest().body(ResponseDto.fail("NOT_FOUND", "존재하지 않는 게시글 id 입니다."));
+        }
+        return null;
+    }
+    @Transactional
+    public ResponseEntity<?> checkError(Member member,Comment comment){
+        if (null == member) {
+            return  ResponseEntity.badRequest().body(ResponseDto.fail("INVALID_TOKEN", "Token이 유효하지 않습니다."));
+        }
+
+        if (null == comment) {
+            return  ResponseEntity.badRequest().body(ResponseDto.fail("NOT_FOUND", "존재하지 않는 댓글 id 입니다."));
+        }
+
+        if (comment.validateMember(member)) {
+            return  ResponseEntity.badRequest().body(ResponseDto.fail("BAD_REQUEST", "작성자만 수정할 수 있습니다."));
+        }
+        return null;
     }
 }
