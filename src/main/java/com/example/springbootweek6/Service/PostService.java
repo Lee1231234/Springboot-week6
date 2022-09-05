@@ -34,7 +34,7 @@ public class PostService {
             return ResponseEntity.badRequest().body(new ResponseErrorDto("INVALID_TOKEN", "Token이 유효하지 않습니다."));
         }
 
-        Post post = new Post(requestDto);
+       Post post = new Post(requestDto,member);
 
         postRepository.save(post);
         return ResponseEntity.ok(
@@ -49,17 +49,7 @@ public class PostService {
         if (null == post) {
             return  ResponseEntity.badRequest().body(new ResponseErrorDto("NOT_FOUND", "존재하지 않는 게시글 id 입니다."));
         }
-        return ResponseEntity.ok(ResponseDto.success(
-                PostResponseDto.builder()
-                        .id(post.getId())
-                        .title(post.getTitle())
-                        .review(post.getReview())
-                        .imgUrl(post.getImgUrl())
-                        .comments(post.getComments())
-                        .author(post.getMember().getNickname())
-                        .createdAt(post.getCreatedAt())
-                        .modifiedAt(post.getModifiedAt())
-                        .build()
+        return ResponseEntity.ok(ResponseDto.success(new PostResponseDto(post)
         ));
     }
 
@@ -79,7 +69,7 @@ public class PostService {
             return check;
         }
         post.update(requestDto);
-        return ResponseEntity.ok(ResponseDto.success(post));
+        return ResponseEntity.ok(ResponseDto.success(new PostResponseDto(post)));
 
     }
 
@@ -92,7 +82,7 @@ public class PostService {
             return check;
         }
         postRepository.delete(post);
-        return ResponseEntity.ok("Delete Success");
+        return ResponseEntity.ok(ResponseDto.success(("Delete Success")));
     }
 
     public ResponseEntity<?> createpostlikes(Long id, HttpServletRequest request) {

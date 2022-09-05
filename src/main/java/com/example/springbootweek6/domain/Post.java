@@ -33,17 +33,22 @@ public class Post extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
-    public Post(PostRequestDto requestDto) {
+    public Post(PostRequestDto requestDto,Member member) {
         this.title= requestDto.getTitle();
         this.review= requestDto.getReview();
         this.imgUrl= requestDto.getImageUrl();
+        this.member = member;
     }
+
+
+
     public void update(PostRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.review = requestDto.getReview();
         this.imgUrl = requestDto.getImageUrl();
     }
     public boolean validateMember(Member member) {
+        System.out.println(this.member.equals(member));
         return !this.member.equals(member);
     }
 

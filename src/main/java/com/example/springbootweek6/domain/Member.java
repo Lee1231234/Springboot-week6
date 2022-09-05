@@ -7,9 +7,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import org.hibernate.Hibernate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Builder
 @Getter
@@ -32,4 +34,15 @@ public class Member extends Timestamped {
         return passwordEncoder.matches(password, this.password);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+            return false;
+        }
+        Member member = (Member) o;
+        return id != null && Objects.equals(id, member.id);
+    }
 }
