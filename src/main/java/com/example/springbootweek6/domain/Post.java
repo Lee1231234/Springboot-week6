@@ -48,7 +48,6 @@ public class Post extends Timestamped {
         this.imgUrl = requestDto.getImageUrl();
     }
     public boolean validateMember(Member member) {
-        System.out.println(this.member.equals(member));
         return !this.member.equals(member);
     }
 
