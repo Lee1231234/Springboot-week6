@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor    // final 멤버변수가 있으면 생성자 항목에 포함시킴
@@ -36,7 +37,8 @@ public class S3Uploader {
     }
 
     private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + "/" + uploadFile.getName();
+        //s3저장+ UUID.randomUUID()난수 생성추가해서 파일명 중복방지
+        String fileName = dirName + "/" + UUID.randomUUID()+ uploadFile.getName();
         String uploadImageUrl = putS3(uploadFile, fileName); //S3로 업로드
 
         removeNewFile(uploadFile);  // 로컬에 생성된 File 삭제 (MultipartFile -> File 전환 하며 로컬에 파일 생성됨)
