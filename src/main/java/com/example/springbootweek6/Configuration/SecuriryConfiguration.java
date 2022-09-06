@@ -69,6 +69,8 @@ public class SecuriryConfiguration {
                 .antMatchers("/h2-console/**" ).permitAll()
                 .antMatchers("/api/post/**").permitAll()
                 .antMatchers("/api/comment/**").permitAll()
+                .antMatchers("/api/main/**").permitAll()
+                .antMatchers("/api/like/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()

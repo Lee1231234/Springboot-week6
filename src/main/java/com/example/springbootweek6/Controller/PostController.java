@@ -32,6 +32,11 @@ public class PostController {
         return postService.getAllPost();
     }
 
+    @RequestMapping(value = "/api/like", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllLikePosts() {
+        return postService.getAllLikePost();
+    }
+
     @RequestMapping(value = "/api/auth/post/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,
                                      HttpServletRequest request) {

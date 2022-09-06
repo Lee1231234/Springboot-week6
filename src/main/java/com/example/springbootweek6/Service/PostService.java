@@ -65,6 +65,12 @@ public class PostService {
 
         return  ResponseEntity.ok(ResponseDto.success(PostResponseDto(posts)));
     }
+    @Transactional
+    public ResponseEntity<?> getAllLikePost() {
+        List<Post> posts=  postRepository.findAllByOrderByLikesDesc();
+
+        return  ResponseEntity.ok(ResponseDto.success(PostResponseDto(posts)));
+    }
     public List<PostResponseDto> PostResponseDto(List<Post> posts){
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
         for(Post post:posts){
@@ -144,4 +150,6 @@ public class PostService {
         }
         return null;
     }
+
+
 }
