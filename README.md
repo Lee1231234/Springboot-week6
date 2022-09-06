@@ -54,7 +54,7 @@
       * PostService
       * UserDetailsSeviceImpl 
     * util
-      S3Uploader
+      * S3Uploader
     
     
 
