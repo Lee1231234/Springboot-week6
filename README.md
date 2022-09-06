@@ -58,7 +58,6 @@
     
     
 
-* API
- [API](https://www.notion.so/a12cec20b7954524a1c72ff9d2ac5238?v=67980b3e5fb145d88ae4c79aced92003)
+* [API](https://www.notion.so/a12cec20b7954524a1c72ff9d2ac5238?v=67980b3e5fb145d88ae4c79aced92003)
 
 노션으로 작성됨.
