@@ -38,6 +38,7 @@ public class MemberService {
 
         Member member = Member.builder()
                 .nickname(requestDto.getNickname())
+                .username(requestDto.getUsername())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .build();
         memberRepository.save(member);

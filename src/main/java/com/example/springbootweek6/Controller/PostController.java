@@ -34,6 +34,11 @@ public class PostController {
         return postService.getAllPost();
     }
 
+    @RequestMapping(value = "/api/like", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllLikePosts() {
+        return postService.getAllLikePost();
+    }
+
     @RequestMapping(value = "/api/auth/post/{id}", method = RequestMethod.PUT)
     public ResponseEntity<?> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,
                                      HttpServletRequest request,
@@ -47,7 +52,7 @@ public class PostController {
         return postService.deletePost(id, request);
     }
     //일단 라이크용
-    @RequestMapping(value = "/api/auth/post/likes/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/auth/post/likes/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> createpostlikes(@PathVariable Long id,
                                           HttpServletRequest request){
         return postService.createpostlikes(id,request);

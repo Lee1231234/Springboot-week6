@@ -49,7 +49,7 @@ public class CommentService {
         return ResponseEntity.ok(ResponseDto.success(
                 CommentResponseDto.builder()
                         .id(comment.getId())
-                        .author(comment.getMember().getNickname())
+                        .author(comment.getMember().getUsername())
                         .content(comment.getContent())
                         .createdAt(comment.getCreatedAt())
                         .modifiedAt(comment.getModifiedAt())
@@ -69,7 +69,7 @@ public class CommentService {
         return ResponseEntity.ok(ResponseDto.success(
                 CommentResponseDto.builder()
                         .id(comment.getId())
-                        .author(comment.getMember().getNickname())
+                        .author(comment.getMember().getUsername())
                         .content(comment.getContent())
                         .createdAt(comment.getCreatedAt())
                         .modifiedAt(comment.getModifiedAt())

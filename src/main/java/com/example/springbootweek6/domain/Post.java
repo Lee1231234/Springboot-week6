@@ -19,6 +19,8 @@ public class Post extends Timestamped {
     private Long id;
 
     @Column(nullable = false)
+    private Long view;
+    @Column(nullable = false)
     private String title;
 
 
@@ -28,12 +30,22 @@ public class Post extends Timestamped {
     @Column(length = 1000)
     private String imgUrl;
 
+    private int likes;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
+/*    public Post(PostRequestDto requestDto,Member member) {
+        this.title= requestDto.getTitle();
+        this.review= requestDto.getReview();
+        this.imgUrl= requestDto.getImageUrl();
+        this.view =0L;
+        this.member = member;
+    }*/
 
 
     public void update(PostRequestDto requestDto, String imageUrl) {
@@ -42,8 +54,18 @@ public class Post extends Timestamped {
         this.imgUrl = imageUrl;
     }
     public boolean validateMember(Member member) {
-        System.out.println(this.member.equals(member));
         return !this.member.equals(member);
+    }
+    public void viewupdate(){
+        this.view++;
+    }
+    public void likeupdate(boolean bool){
+        if(bool){
+            this.likes++;
+        }else{
+            this.likes--;
+        }
+
     }
 
 
