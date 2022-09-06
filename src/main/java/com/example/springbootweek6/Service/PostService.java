@@ -90,9 +90,7 @@ public class PostService {
         List<Post> posts=  postRepository.findAllByOrderByLikesDesc();
         return  ResponseEntity.ok(ResponseDto.success(PostResponseDto(posts)));
     }
-    public ResponseEntity<?> updatePost(Long id, PostRequestDto requestDto, MultipartFile file, HttpServletRequest request) throws IOException{
-        return  ResponseEntity.ok(ResponseDto.success(PostResponseDto(posts)));
-    }
+
     public List<PostResponseDto> PostResponseDto(List<Post> posts){
         List<PostResponseDto> postResponseDtos = new ArrayList<>();
         for(Post post:posts){
