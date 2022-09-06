@@ -99,7 +99,7 @@ public class PostService {
         return  postResponseDtos;
     }
     @Transactional
-    public ResponseEntity<?> updatePost(Long id, PostRequestDto requestDto, HttpServletRequest request) {
+    public ResponseEntity<?> updatePost(Long id, PostRequestDto requestDto, MultipartFile file, HttpServletRequest request) throws IOException{
         Member member = validateMember(request);
         Post post = isPresentPost(id);
         ResponseEntity<?> check =  CheckErrorPost(post,member);
