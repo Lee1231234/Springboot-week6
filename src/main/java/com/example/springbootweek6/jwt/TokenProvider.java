@@ -4,7 +4,7 @@ import com.example.springbootweek6.Auth.Authority;
 import com.example.springbootweek6.Repository.RefreshTokenRepository;
 import com.example.springbootweek6.domain.Member;
 import com.example.springbootweek6.domain.RefreshToken;
-import com.example.springbootweek6.domain.TokenDto;
+import com.example.springbootweek6.Dto.TokenDto;
 import com.example.springbootweek6.domain.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

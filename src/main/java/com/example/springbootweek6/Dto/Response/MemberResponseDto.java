@@ -13,5 +13,7 @@ import lombok.NoArgsConstructor;
 public class MemberResponseDto {
     private boolean ok;
     private String message;
+    private String Authorization;
+    private String RefreshToken;
 
 }

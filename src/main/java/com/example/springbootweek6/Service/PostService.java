@@ -49,6 +49,7 @@ public class PostService {
                 .title(requestDto.getTitle())
                 .review(requestDto.getReview())
                 .member(member)
+                .view(0L)
                 .imgUrl(postImage)
                 .build();
 
@@ -59,8 +60,9 @@ public class PostService {
                         .id(post.getId())
                         .title(post.getTitle())
                         .review(post.getReview())
-                        .author(post.getMember().getNickname())
+                        .author(post.getMember().getUsername())
                         .imgUrl(post.getImgUrl())
+                        .view(post.getView())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build()

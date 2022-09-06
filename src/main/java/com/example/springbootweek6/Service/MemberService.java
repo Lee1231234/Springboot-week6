@@ -5,7 +5,7 @@ import com.example.springbootweek6.Dto.Request.MemberRequestDto;
 import com.example.springbootweek6.Dto.Response.MemberResponseDto;
 import com.example.springbootweek6.Repository.MemberRepository;
 import com.example.springbootweek6.domain.Member;
-import com.example.springbootweek6.domain.TokenDto;
+import com.example.springbootweek6.Dto.TokenDto;
 import com.example.springbootweek6.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -59,7 +59,14 @@ public class MemberService {
         TokenDto tokenDto = tokenProvider.generateTokenDto(member);
         tokenToHeaders(tokenDto, response);
 
-        return Request("로그인 성공",true);
+        return ResponseEntity.ok(
+                MemberResponseDto.builder()
+                        .ok(true)
+                        .message("로그인 성공")
+                        .Authorization("Bearer " + tokenDto.getAccessToken())
+                        .RefreshToken(tokenDto.getRefreshToken())
+                        .build()
+        );
     }
 
     public ResponseEntity<?> logout(HttpServletRequest request) {

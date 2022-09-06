@@ -1,4 +1,4 @@
-package com.example.springbootweek6.domain;
+package com.example.springbootweek6.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
