@@ -32,6 +32,9 @@ public class Post extends Timestamped {
 
     private int likes;
 
+
+    private String Coordinate;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 

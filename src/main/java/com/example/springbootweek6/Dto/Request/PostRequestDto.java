@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class PostRequestDto {
     private  String title;
     private  String review;
+    private  String Coordinate;
+
 
 
 

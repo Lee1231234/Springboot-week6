@@ -25,8 +25,12 @@ public class PostResponseDto {
     private String review;
     private String imgUrl;
     private String author;
+
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
+
+    private  String Coordinate;
+
 
     private List<Comment> comments;
     public PostResponseDto(Post post){
@@ -36,6 +40,7 @@ public class PostResponseDto {
         this.imgUrl = post.getImgUrl();
         this.review = post.getReview();
         this.view =  post.getView();
+        this.Coordinate = post.getCoordinate();
         this.createdAt = post.getCreatedAt();
         this.modifiedAt = post.getModifiedAt();
     }

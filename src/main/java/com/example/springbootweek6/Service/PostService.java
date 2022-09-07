@@ -41,13 +41,21 @@ public class PostService {
         if (null == member) {
             return ResponseEntity.badRequest().body(new ResponseErrorDto("INVALID_TOKEN", "Token이 유효하지 않습니다."));
         }
+        String postImage;
         //이미지 postImage에 저장 폴더명 "static"
-        String postImage = s3Uploader.upload(image, "static");
+        if(image!=null){
+            postImage = s3Uploader.upload(image, "static");
+        }else{
+            postImage = null;
+        }
+
 
 
         Post post = Post.builder()
                 .title(requestDto.getTitle())
                 .review(requestDto.getReview())
+                .Coordinate(requestDto.getCoordinate())
+
                 .member(member)
                 .view(0L)
                 .imgUrl(postImage)
@@ -63,6 +71,7 @@ public class PostService {
                         .author(post.getMember().getUsername())
                         .imgUrl(post.getImgUrl())
                         .view(post.getView())
+                        .Coordinate(post.getCoordinate())
                         .createdAt(post.getCreatedAt())
                         .modifiedAt(post.getModifiedAt())
                         .build()

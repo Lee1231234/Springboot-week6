@@ -20,9 +20,8 @@ public class PostController {
 
     @RequestMapping(value = "/api/auth/post", method = RequestMethod.POST)
     public ResponseEntity<?> createPost(PostRequestDto requestDto,
-                                        @RequestParam (value="image") MultipartFile image, HttpServletRequest request) throws IOException {
-        System.out.println(requestDto.getTitle()+" "+requestDto.getReview());
-        System.out.println(image);
+                                        @RequestPart (value="image",required = false) MultipartFile image, HttpServletRequest request) throws IOException {
+
         return postService.createPost(requestDto, request, image);
     }
 
