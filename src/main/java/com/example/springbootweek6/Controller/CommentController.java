@@ -17,31 +17,31 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @RequestMapping(value = "/api/auth/comment", method = RequestMethod.POST)
+    @PostMapping(value = "/api/auth/comment")
     public ResponseEntity<?> createComment(@RequestBody CommentRequestDto requestDto,
                                            HttpServletRequest request) {
         return commentService.createComment(requestDto, request);
     }
 
     //사용하지않음.
-    @RequestMapping(value = "/api/comment/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/api/comment/{id}")
     public ResponseEntity<?> getAllComments(@PathVariable Long id) {
         return commentService.getAllCommentsByPost(id);
     }
 
-    @RequestMapping(value = "/api/auth/comment/{id}", method = RequestMethod.PUT)
+    @PutMapping(value = "/api/auth/comment/{id}")
     public ResponseEntity<?> updateComment(@PathVariable Long id, @RequestBody CommentRequestDto requestDto,
                                         HttpServletRequest request) {
         return commentService.updateComment(id, requestDto, request);
     }
 
-    @RequestMapping(value = "/api/auth/comment/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/api/auth/comment/{id}")
     public ResponseEntity<?> deleteComment(@PathVariable Long id,
                                         HttpServletRequest request) {
         return commentService.deleteComment(id, request);
     }
 
-    @RequestMapping(value = "/api/auth/comment/likes/{id}", method = RequestMethod.POST)
+    @PostMapping(value = "/api/auth/comment/likes/{id}")
     public ResponseEntity<?> createcommentlikes(@PathVariable Long id,
                                              HttpServletRequest request){
         return commentService.createcommentlikes(id,request);

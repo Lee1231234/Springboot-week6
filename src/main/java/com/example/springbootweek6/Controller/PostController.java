@@ -18,42 +18,42 @@ public class PostController {
 
     private final PostService postService;
 
-    @RequestMapping(value = "/api/auth/post", method = RequestMethod.POST)
+    @PostMapping(value = "/api/auth/post")
     public ResponseEntity<?> createPost(PostRequestDto requestDto,
                                         @RequestPart (value="image",required = false) MultipartFile image, HttpServletRequest request) throws IOException {
 
         return postService.createPost(requestDto, request, image);
     }
 
-    @RequestMapping(value = "/api/post/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/api/post/{id}")
     public ResponseEntity<?> getPost(@PathVariable Long id) {
         return postService.getPost(id);
     }
 
-    @RequestMapping(value = "/api/main", method = RequestMethod.GET)
+    @GetMapping(value = "/api/main")
     public ResponseEntity<?> getAllPosts() {
         return postService.getAllPost();
     }
 
-    @RequestMapping(value = "/api/like", method = RequestMethod.GET)
+    @GetMapping(value = "/api/like")
     public ResponseEntity<?> getAllLikePosts() {
         return postService.getAllLikePost();
     }
 
-    @RequestMapping(value = "/api/auth/post/{id}", method = RequestMethod.PUT)
+    @PutMapping(value = "/api/auth/post/{id}")
     public ResponseEntity<?> updatePost(@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,
                                      HttpServletRequest request,
                                         @RequestPart (value="image") MultipartFile imgae) throws IOException{
         return postService.updatePost(id, postRequestDto, imgae, request);
     }
 
-    @RequestMapping(value = "/api/auth/post/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/api/auth/post/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id,
                                      HttpServletRequest request) {
         return postService.deletePost(id, request);
     }
     //일단 라이크용
-    @RequestMapping(value = "/api/auth/post/likes/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/api/auth/post/likes/{id}")
     public ResponseEntity<?> createpostlikes(@PathVariable Long id,
                                           HttpServletRequest request){
         return postService.createpostlikes(id,request);
